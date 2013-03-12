@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>{{title}}</title>
+{% load staticfiles %}
+<link rel="stylesheet" type="text/css" href="/static/summarize.css"> 
+<script type="text/javascript" src="/static/jquery.js"> </script>
+<script type="text/javascript"> 
+var article_id = {{article_id}};
+</script>
+<script type="text/javascript" src="/static/custom.js"> </script>
+</head>
+<div class="wrapper">
+    <div class="page-content clearfix">
+        <div class="page-content-l">
+            <div class="article clearfix">
+
+                <h1 class="section_header">{{title}}</h1>
+                {% if summary %}
+                {% for paragraph in article_paragraph %}
+                <p id="para{{forloop.counter0}}">{{paragraph}}</p>
+                {% endfor %}
+                {% else %}
+                <p>No Article are available.</p>
+                {% endif %}
+
+            </div>
+            <div class="btn-wrapper">
+                <button id="save_comments_btn" type="button">Save</button> 
+                <button id="edit_article_btn" type="button">Edit</button> 
+                <button id="article_summary_btn" type="button">Article Summary</button> 
+
+            </div>
+
+
+
+        </div>
+        <div class="page-content-r">
+            <div class="comment_summary_wrapper">
+                <h2 class="section_header">Comment Summary</h2>
+                <div class="content_summary">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="article_summary_dialog">
+    <h2>Summary</h2>
+    <a href="#" id="close" class="closeit">Close</a>
+    <div id="article_summary">
+        <ul>
+            {% if summary %}
+            {% for sentence in summary %}
+            <li>{{sentence}}</li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>No Summary are available.</p>
+        {% endif %}
+    </div>
+</div>
+<div class="overlay"></div>
+</body>
+
+</html> 

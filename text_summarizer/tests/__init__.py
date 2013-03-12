@@ -1,0 +1,1 @@
+from text_summarizer.tests.article_test import ArticleTest

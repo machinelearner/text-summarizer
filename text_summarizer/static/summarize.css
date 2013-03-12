@@ -1,0 +1,195 @@
+/** reset css start **/
+
+html, body, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+    display: block;
+}
+body {
+    line-height: 1;
+}
+ol, ul {
+    list-style: none;
+}
+blockquote, q {
+    quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+    content: '';
+    content: none;
+}
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+/** reset css end **/
+body{
+    font:75% Arial,Verdana,sans-serif;	
+}
+p{
+    margin:10px 0px;
+    border:1px solid transparent;
+}
+h1{
+    font-size: 1.8em;
+    margin-bottom: 10px;
+}
+h2{
+    font-size: 1.5em;
+}
+/** reusable class start**/
+
+.clearfix:after {
+    content: ".";
+    display: block;
+    clear: both;
+    visibility: hidden;
+    line-height: 0;
+    height: 0;
+}
+
+.clearfix {
+    display: inline-block;
+}
+
+html[xmlns] .clearfix {
+    display: block;
+}
+
+* html .clearfix {
+    height: 1%;
+}
+
+/** reusable class start**/
+
+.wrapper{
+    width:972px;
+    margin:0px auto;
+    padding-top:20px;
+}
+.page-content-l{
+    float:left;
+    width:634px;
+}
+.article{
+    padding: 10px;
+}
+.comment_header{
+    margin-bottom:10px;
+}
+.comment_value{
+    margin-bottom: 20px;
+}
+.page-content-r{
+    float:left;
+    width:324px;
+    min-height: 400px;
+}
+.section_header{
+    padding-bottom:10px;
+}
+.comment_summary_wrapper{
+    background-image: linear-gradient(bottom, rgb(255,255,255) 49%, rgb(224,224,224) 75%);
+    background-image: -o-linear-gradient(bottom, rgb(255,255,255) 49%, rgb(224,224,224) 75%);
+    background-image: -moz-linear-gradient(bottom, rgb(255,255,255) 49%, rgb(224,224,224) 75%);
+    background-image: -webkit-linear-gradient(bottom, rgb(255,255,255) 49%, rgb(224,224,224) 75%);
+    background-image: -ms-linear-gradient(bottom, rgb(255,255,255) 49%, rgb(224,224,224) 75%);
+
+    background-image: -webkit-gradient(
+    linear,
+    left bottom,
+    left top,
+    color-stop(0.49, rgb(255,255,255)),
+    color-stop(0.75, rgb(224,224,224))
+    );
+
+    position:relative
+    padding:10px;
+}
+[contenteditable]:hover:not(:focus){
+    border:1px solid #cccccc;
+}
+.btn-wrapper{
+    padding-top:20px;
+}
+.btn-wrapper button{
+    float:right;
+    margin-left:10px;
+}
+.article_summary_dialog{
+    background-color: #e8e8e8;
+    height: 600px;
+    padding: 4px 10px 10px 10px;
+    width: 622px;
+    top:40px;
+    display: none;
+    position:fixed;
+    z-index:99999;
+    border:1px solid #a8a8a8;
+    overflow:hidden ;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+}
+.article_summary_dialog h2{
+    text-align: center;
+}
+a.closeit{
+    color: #DF3A01;
+    font-size: 1.2em;
+    font-weight: bold;
+    padding-right: 0;
+    position: absolute;
+    right: 22px;
+    text-decoration: none;
+    top: 8px;
+}
+a.closeit:hover{
+    text-decoration:none;
+    color: #B40404 ;
+}
+.overlay{
+    top:0px;
+    position:absolute;
+    z-index:9000;
+    background-color:#000;
+    display:none;
+}
+#article_summary{
+    border: 1px solid #CECECE;
+    height: 545px;
+    margin: 10px auto 0px;
+    width: 600px;    
+    padding:10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+}
+#article_summary ul{
+    padding-left:20px;
+}
+#article_summary ul li{
+    list-style-type:disc;
+    margin-bottom:10px;
+}
