@@ -17,8 +17,17 @@ var article_id = {{article_id}};
 
                 <h1 class="section_header">{{title}}</h1>
                 {% if summary %}
-                {% for paragraph in article_paragraph %}
-                <p id="para{{forloop.counter0}}">{{paragraph}}</p>
+                {% for para_item in article_paragraphs_with_edit_summary %}
+                <div class="para_container">
+                    <p id="para{{forloop.counter0}}">{{para_item.0}}</p>
+                    <div id="edits_para_{{forloop.counter0}}" class="hide">
+                        <ul>
+                            {% for sentence in para_item.1 %}
+                            <li>{{sentence}}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
                 {% endfor %}
                 {% else %}
                 <p>No Article are available.</p>

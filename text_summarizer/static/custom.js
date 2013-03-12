@@ -9,8 +9,8 @@ $(function(){
     //var html=$(this).html();
     //$(".content_summary").html(html);
     //});
-    $("p").hover(function(){
-        var html=$(this).html();
+    $(".para_container").hover(function(){
+        var html=$(this).find('div').html();
         $(".content_summary").html(html);
         var top= $(this).offset().top - 60;
 
@@ -42,9 +42,9 @@ $(function(){
         });
         $("p").removeAttr("contenteditable");
         $(".article").css("border","1px solid transparent");
-        alert(para_edited);
+        //alert(para_edited);
         $.get(url, {paragraphs : JSON.stringify(para_edited)}, function(response){
-            alert(response);
+            //alert(response);
         });    });
 
         $("#edit_article_btn").click(function(){

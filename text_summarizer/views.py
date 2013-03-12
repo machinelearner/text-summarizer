@@ -8,14 +8,15 @@ from text_summarizer.models import *
 def index(request,article_id):
     article = get_object_or_404(Article, pk=article_id)
     summarizer = Summarizer()
-    paragraphs = article.content.split('\n')
+    paragraphs_with_edit_summary = article.paragraphs_with_edit_summary()
     summary = summarizer.summarize_article(article)
+    summary_edit_sentences = []
     template = loader.get_template('index.html')
     context = Context({
         'summary': summary,
         'article_id':article_id,
         'title': article.title,
-        'article_paragraph': paragraphs,
+        'article_paragraphs_with_edit_summary': paragraphs_with_edit_summary,
         })
     return HttpResponse(template.render(context))
 

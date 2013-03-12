@@ -46,7 +46,7 @@ class Summarizer():
         summary_sentences = []
         sentence_number_sorted_by_weights = sorted(weighted_sentences,key=weighted_sentences.get,reverse=True)
         for sentence_number in sentence_number_sorted_by_weights[:number_of_summary_sentences]:
-            if(SimilarityFinder.isSimilar(summary_sentences,sentences[sentence_number])):
+            if(SimilarityFinder.isNotSimilar(summary_sentences,sentences[sentence_number])):
                 summary_sentences.append(sentences[sentence_number])
         return summary_sentences
 
@@ -76,6 +76,7 @@ class Summarizer():
         edited_paragraph_numbers = OrderedDict.fromkeys(map(lambda paragraph: paragraph.paragraph_number,edited_paragraphs)).keys()
         #print("######################")
         #print(edited_paragraph_numbers)
+        ArticleEditSummarySentence.objects.filter(article=article).delete()
         edits_summary = defaultdict(list)
         for paragraph_number in edited_paragraph_numbers:
             original_paragraph = original_paragraphs[paragraph_number]
@@ -89,4 +90,7 @@ class Summarizer():
             for group,sentences in similar_sentences.items():
                 summary_sentences += self.summarize_sentences(sentences,len(similar_sentences.keys()))
             edits_summary[paragraph_number] += summary_sentences
+            for sentence in summary_sentences:
+                summary_sentence = ArticleEditSummarySentence(paragraph_number=paragraph_number,content=sentence,article=article)
+                summary_sentence.save()
         return edits_summary

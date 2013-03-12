@@ -193,3 +193,6 @@ a.closeit:hover{
     list-style-type:disc;
     margin-bottom:10px;
 }
+.hide{
+    display:none;
+}
