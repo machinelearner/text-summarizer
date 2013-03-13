@@ -25,6 +25,18 @@ class TextProcessor():
         sentences = filter(lambda sentence: sentence,sentences )
         return sentences
 
+    def nltk_sentences(self,text):
+        return nltk.sent_tokenize(text)
+
+    def pos_tag(self,text):
+        return nltk.pos_tag(text)
+
+    def extract_ner_tree(self,text):
+        tokens = self.no_stop_tokens(text)
+        pos_tagged_sentence = self.pos_tag(tokens)
+        NER_tree = nltk.ne_chunk(pos_tagged_sentence,binary=True)
+        return NER_tree
+
 
     def no_stop_tokens(self,text):
         tokens = []

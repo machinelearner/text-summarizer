@@ -6,7 +6,7 @@ POS_TAGS = ["NN","NNS","NNP","NNPS"]
 class Article(models.Model):
     title = models.CharField(max_length=500)
     content = models.TextField(max_length=25000)
-
+    summarizer = Summarizer()
     class Meta:
         app_label = 'text_summarizer'
 
@@ -18,6 +18,10 @@ class Article(models.Model):
     def paragraphs(self):
         paragraphs = self.content.split('\n')
         return paragraphs
+
+    def summary(self):
+        return self.summarizer.summarize(self.content)
+
 
     def paragraphs_with_edit_summary(self):
         paragraphs = self.paragraphs()
