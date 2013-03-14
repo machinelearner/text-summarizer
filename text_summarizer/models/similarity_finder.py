@@ -1,10 +1,6 @@
-from text_summarizer.models import *
+from text_summarizer.models import TextProcessor,JaccardCoefficient,UnigramDistribution
 from collections import defaultdict,OrderedDict
-import math
-import nltk
 from nltk import cluster
-from nltk.cluster import euclidean_distance
-from numpy import array
 
 class SimilarityFinder():
     JACCARD_INDEX_DISSIMILAARITY_THRESHOLD  = 0.5

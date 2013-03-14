@@ -7,9 +7,9 @@ from text_summarizer.models import *
 
 def index(request,article_id):
     article = get_object_or_404(Article, pk=article_id)
-    #summarizer = Summarizer()
+    summarizer = Summarizer()
     paragraphs_with_edit_summary = article.paragraphs_with_edit_summary()
-    summary = article.summary()
+    summary = summarizer.summarize(article.content)
     summary_edit_sentences = []
     template = loader.get_template('index.html')
     context = Context({

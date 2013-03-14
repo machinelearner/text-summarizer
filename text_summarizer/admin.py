@@ -8,8 +8,8 @@ class ArticleAdmin(admin.ModelAdmin):
     search_fields = ['title','content']
 
 class AnnotationAdmin(admin.ModelAdmin):
-    list_display = ('word','weight')
-    list_filter = ('word','weight')
+    list_display = ('word','term_frequency','document_frequency',)
+    list_filter = ('word',)
     search_fields = ['word']
 
 class ArticleEditAdmin(admin.ModelAdmin):

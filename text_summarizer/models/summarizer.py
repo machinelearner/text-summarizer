@@ -1,4 +1,4 @@
-from text_summarizer.models import *
+from text_summarizer.models import TextProcessor,ArticleEditSummarySentence,SimilarityFinder,Annotation
 from collections import defaultdict,OrderedDict
 import math
 import nltk
@@ -86,7 +86,7 @@ class Summarizer():
         annotations = Annotation.objects.filter(word__in=words)
         sigma_weight = 0
         for annotation in annotations:
-            sigma_weight += annotation.weight
+            sigma_weight += annotation.tfidf()
         normalized_sigma_weight = sigma_weight/len(words) if len(words) != 0 else 0
         return normalized_sigma_weight
 

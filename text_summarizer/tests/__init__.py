@@ -1,1 +1,3 @@
 from text_summarizer.tests.article_test import ArticleTest
+from text_summarizer.tests.unigram_distribution_test import UnigramDistributionTest
+from text_summarizer.tests.text_processor_test import TextProcessorTest

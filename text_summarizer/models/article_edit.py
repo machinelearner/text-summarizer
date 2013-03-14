@@ -1,6 +1,5 @@
 from django.db import models
-from text_summarizer.models import Annotation,Article
-from collections import defaultdict,OrderedDict
+from text_summarizer.models import Article
 
 class ArticleEdit(models.Model):
     paragraph_number = models.IntegerField()

@@ -1,10 +1,4 @@
-from text_summarizer.models import *
-from collections import defaultdict,OrderedDict
-import math
-import nltk
-from nltk import cluster
-from nltk.cluster import euclidean_distance
-from numpy import array
+from text_summarizer.models import TextProcessor
 
 class JaccardCoefficient():
 

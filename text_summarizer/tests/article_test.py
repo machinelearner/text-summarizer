@@ -12,26 +12,6 @@ class ArticleTest(TestCase):
         self.dummy_article = Article(title=title1,content=content1)
         self.dummy_article.save()
 
-    def testShouldExtractWordsFromASentence(self):
-        #test to validate the regex
-        identified_unique_tokens = self.dummy_article.tokenize()
-        self.assertEqual(len(identified_unique_tokens),19)
-        actual_unique_tokens = ['This','is','a','test','article','part','of','the','content','Sentence','consists','nouns','and','other','things','Los','Angeles','city','Angels']
-        self.assertEqual(sorted(identified_unique_tokens),sorted(actual_unique_tokens))
-
-    def testShouldExtractWordsFromASentenceExcludingPunctuations(self):
-        #test to validate the regex
-        title2 = 'Title!!!'
-        content2 = 'Bizzare!! This content has all-sort-of punctuations for the regex to identify. '
-        dummy_article2 = Article(title=title2,content=content2)
-        dummy_article2.save()
-
-        identified_unique_tokens = dummy_article2.tokenize()
-        self.assertEqual(len(identified_unique_tokens),12)
-        actual_unique_tokens = ['Title','Bizzare','This','content','has','all-sort-of','punctuations','for','the','regex','to','identify']
-        self.assertEqual(sorted(identified_unique_tokens),sorted(actual_unique_tokens))
-
-
     #Integration kind of test
     def testShouldCreateArticleWithoutAssociatedAnnotation(self):
         #1 object already created during setUp method

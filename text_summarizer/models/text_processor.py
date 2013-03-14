@@ -1,4 +1,3 @@
-from text_summarizer.models import *
 import nltk
 from nltk.tokenize.regexp import RegexpTokenizer
 import re
@@ -22,7 +21,8 @@ class TextProcessor():
 
     def sent_tokenize(self,text):
         sentences = re.compile("[\n\.?]").split(text)
-        sentences = filter(lambda sentence: sentence,sentences )
+        sentences = filter(lambda sentence: sentence.strip(),sentences )
+        sentences = map(lambda sentence: sentence.strip(),sentences)
         return sentences
 
     def nltk_sentences(self,text):
@@ -47,10 +47,5 @@ class TextProcessor():
         return tokens
 
     def is_blank(self,text):
-        tokens = []
-        tokenizer = RegexpTokenizer('(\$?\d+\.\d+)|(([\w]+-)*[\w]+)')
-        tokens += tokenizer.tokenize(text)
-        #stemmer = nltk.stem.snowball.EnglishStemmer()
-        #tokens = map(lambda x: stemmer.stem(x),tokens)
+        tokens = self.no_stop_tokens(text)
         return len(tokens) == 0
-
