@@ -1,8 +1,7 @@
-from text_summarizer.models import TextProcessor,ArticleEditSummarySentence,SimilarityFinder,Annotation
+from text_summarizer.models import TextProcessor,ArticleEditSummarySentence,SimilarityFinder,Annotation,CosineSimilarity,UnigramDistribution
 from collections import defaultdict,OrderedDict
 import math
 import nltk
-
 
 class Summarizer():
     text_processor = TextProcessor()
@@ -16,19 +15,108 @@ class Summarizer():
 
     def summarize(self,content):
         sentences =self.text_processor.nltk_sentences(content)
-        sentence_dict = defaultdict(int)
-        for sentence_number,sentence in enumerate(sentences):
-            if (self.text_processor.is_blank(sentence)):
-                continue
-            weight_of_sentence = self.sentence_weight(sentence,sentence_number,len(sentences))
-            sentence_dict[sentence_number] = round(weight_of_sentence/self.NUMBER_OF_WEIGHTING_MEASURES,4)
-
+        sentence_dict = self.sentence_weights(sentences)
+        print(sentence_dict)
         sentence_number_sorted_by_weights = sorted(sentence_dict,key=sentence_dict.get,reverse=True)
         summary_sentences = []
         number_of_sentences_in_summary = int(math.ceil(self.COMPRESSION * len(sentences)))
         for sentence_number in sorted(sentence_number_sorted_by_weights[:number_of_sentences_in_summary]):
             summary_sentences.append(sentences[sentence_number])
         return summary_sentences
+
+    #def summarize_using_cosine_similarity_constant(self,content):
+        #sentences =self.text_processor.nltk_sentences(content)
+        #tokens_in_content = self.text_processor.tokenize(content)
+        #sentence_dict = defaultdict(int)
+        #for sentence_number,sentence in enumerate(sentences):
+            #if (self.text_processor.is_blank(sentence)):
+                #continue
+            #sentence_vector = UnigramDistribution.generate_vector(sentence,tokens_in_content)
+            #sentence_dict[sentence_number] = CosineSimilarity.calculate(sentence_vector,document_vector)
+
+        #sentence_number_sorted_by_weights = sorted(sentence_dict,key=sentence_dict.get,reverse=True)
+        #summary_sentences = []
+        #number_of_sentences_in_summary = int(math.ceil(self.COMPRESSION * len(sentences)))
+        #for sentence_number in sorted(sentence_number_sorted_by_weights[:number_of_sentences_in_summary]):
+            #summary_sentences.append(sentences[sentence_number])
+        #return summary_sentences
+
+    #def sentence_weight(self,sentence,sentence_number,number_of_sentences):
+        #sentence_location_weight = self.get_sentence_location_weight(sentence_number,number_of_sentences)
+        #word_weight_aggregation = self.get_word_weight_aggregation(sentence)
+        #n_e_r_weight = self.get_n_e_r_weight(sentence)
+        #weight_of_sentence = self.ALPHA * sentence_location_weight + self.BETA * word_weight_aggregation + self.GAMMA * n_e_r_weight
+        #return weight_of_sentence
+
+    def sentence_weights(self,sentences):
+        sentence_dict = defaultdict(float)
+        max_tfidf = UnigramDistribution.max_tfidf()
+        location_weights = []
+        for sent_number,sent in enumerate(sentences):
+            location_weights.append(self.get_sentence_location_weight(sent_number,len(sentences)))
+        tfidf_weigths = map(lambda sent: self.get_word_weight_aggregation(sent),sentences)
+        normalized_tfidf_weights = map(lambda w: w/max_tfidf,tfidf_weigths)
+        n_e_r_weights = map(lambda sent: self.get_n_e_r_weight(sent),sentences)
+        print(n_e_r_weights)
+        normalized_n_e_r = self.normList(n_e_r_weights)
+        for sentence_number,sentence in enumerate(sentences):
+            if (self.text_processor.is_blank(sentence)):
+                continue
+            weight_of_sentence = self.ALPHA * location_weights[sentence_number] + self.BETA * normalized_tfidf_weights[sentence_number] + self.GAMMA * normalized_n_e_r[sentence_number]
+            sentence_dict[sentence_number] = round(weight_of_sentence/(self.ALPHA + self.BETA + self.GAMMA),4)
+        return sentence_dict
+
+
+    def summarize_using_cosine_similarity(self,content):
+        sentences =self.text_processor.nltk_sentences(content)
+        tokens_in_content = self.text_processor.tokenize(content)
+        document_vector = UnigramDistribution.generate_vector(content,tokens_in_content)
+        number_of_sentences_in_summary = int(math.ceil(self.COMPRESSION * len(sentences)))
+        summary_sentences = []
+        print("Sentences in summary(order of relevance)")
+        for i in range(0,number_of_sentences_in_summary):
+            sentence_dict = defaultdict(int)
+            for sentence_number,sentence in enumerate(sentences):
+                if (self.text_processor.is_blank(sentence) or sentence_number in summary_sentences):
+                    continue
+                sentence_vector = UnigramDistribution.generate_vector(sentence,tokens_in_content)
+                sentence_dict[sentence_number] = CosineSimilarity.calculate(sentence_vector,document_vector)
+            highest_similarity_sentence_number = sorted(sentence_dict,key=sentence_dict.get,reverse=True)[0]
+            print(highest_similarity_sentence_number)
+            summary_sentences.append(highest_similarity_sentence_number)
+            tokens_in_sentence = self.text_processor.tokenize(sentences[highest_similarity_sentence_number])
+            tokens_in_content = filter(lambda token: token not in tokens_in_sentence,tokens_in_content)
+            document_vector = UnigramDistribution.generate_vector(content,tokens_in_content)
+        summary = []
+        for sentence_number in sorted(summary_sentences):
+            summary.append(sentences[sentence_number])
+        return summary
+
+    def summarize_using_cos_and_weights(self,content):
+        sentences =self.text_processor.nltk_sentences(content)
+        sentence_weights = self.sentence_weights(sentences)
+        tokens_in_content = self.text_processor.tokenize(content)
+        document_vector = UnigramDistribution.generate_vector(content,tokens_in_content)
+        number_of_sentences_in_summary = int(math.ceil(self.COMPRESSION * len(sentences)))
+        summary_sentences = []
+        print("Sentences in summary(order of relevance)")
+        for i in range(0,number_of_sentences_in_summary):
+            sentence_dict = defaultdict(int)
+            for sentence_number,sentence in enumerate(sentences):
+                if (self.text_processor.is_blank(sentence) or sentence_number in summary_sentences):
+                    continue
+                sentence_vector = UnigramDistribution.generate_vector(sentence,tokens_in_content)
+                sentence_dict[sentence_number] = CosineSimilarity.calculate(sentence_vector,document_vector) + sentence_weights[sentence_number]
+            highest_similarity_sentence_number = sorted(sentence_dict,key=sentence_dict.get,reverse=True)[0]
+            print(highest_similarity_sentence_number)
+            summary_sentences.append(highest_similarity_sentence_number)
+            tokens_in_sentence = self.text_processor.tokenize(sentences[highest_similarity_sentence_number])
+            tokens_in_content = filter(lambda token: token not in tokens_in_sentence,tokens_in_content)
+            document_vector = UnigramDistribution.generate_vector(content,tokens_in_content)
+        summary = []
+        for sentence_number in sorted(summary_sentences):
+            summary.append(sentences[sentence_number])
+        return summary
 
     def summarize_edits_for_article(self,article):
         original_paragraphs = article.paragraphs()
@@ -55,7 +143,8 @@ class Summarizer():
         return edits_summary
 
     def summarize_sentences(self,sentences,number_of_clusters):
-        number_of_summary_sentences = 2#number_of_clusters
+        #number_of_summary_sentences = 2#number_of_clusters
+        """revisit number of sentence selection"""
         weighted_sentences = defaultdict(float)
         for index,sentence in enumerate(sentences):
             word_weight_aggregation = self.get_word_weight_aggregation(sentence)
@@ -65,17 +154,10 @@ class Summarizer():
             weighted_sentences[index] = weight
         summary_sentences = []
         sentence_number_sorted_by_weights = sorted(weighted_sentences,key=weighted_sentences.get,reverse=True)
-        for sentence_number in sentence_number_sorted_by_weights[:number_of_summary_sentences]:
+        for sentence_number in sentence_number_sorted_by_weights:
             if(SimilarityFinder.isNotSimilar(summary_sentences,sentences[sentence_number])):
                 summary_sentences.append(sentences[sentence_number])
         return summary_sentences
-
-    def sentence_weight(self,sentence,sentence_number,number_of_sentences):
-        sentence_location_weight = self.get_sentence_location_weight(sentence_number,number_of_sentences)
-        word_weight_aggregation = self.get_word_weight_aggregation(sentence)
-        n_e_r_weight = self.get_n_e_r_weight(sentence)
-        weight_of_sentence = self.ALPHA * sentence_location_weight + self.BETA * word_weight_aggregation + self.GAMMA * n_e_r_weight
-        return weight_of_sentence
 
     def get_sentence_location_weight(self,sentence_number,number_of_sentences):
         location_weight = 1 - sentence_number/float(number_of_sentences)
@@ -85,9 +167,12 @@ class Summarizer():
         words = self.text_processor.tokenize(sentence)
         annotations = Annotation.objects.filter(word__in=words)
         sigma_weight = 0
+        max_tfidf_in_sentence = -1
         for annotation in annotations:
-            sigma_weight += annotation.tfidf()
-        normalized_sigma_weight = sigma_weight/len(words) if len(words) != 0 else 0
+            tfidf = annotation.tfidf()
+            max_tfidf_in_sentence = tfidf if max_tfidf_in_sentence < tfidf else max_tfidf_in_sentence
+            sigma_weight += tfidf
+        normalized_sigma_weight = sigma_weight/(len(words)*max_tfidf_in_sentence) if len(words) != 0 else 0
         return normalized_sigma_weight
 
     def get_n_e_r_weight(self,sentence):
@@ -96,3 +181,10 @@ class Summarizer():
             return 0
         number_of_NERs = reduce(lambda value1,value2: value1+value2,map(lambda node: 1 if isinstance(node,nltk.tree.Tree) else 0,NER_tree))
         return number_of_NERs
+
+    @staticmethod
+    def normList(L, normalizeTo=1):
+        '''normalize values of a list to make its max = normalizeTo'''
+
+        vMax = max(L)
+        return [ x/(vMax*1.0)*normalizeTo for x in L]

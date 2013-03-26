@@ -20,7 +20,7 @@ var article_id = {{article_id}};
                 {% for para_item in article_paragraphs_with_edit_summary %}
                 <div class="para_container">
                     <p id="para{{forloop.counter0}}">{{para_item.0}}</p>
-                    <div id="edits_para_{{forloop.counter0}}" class="hide">
+                    <div id="edits_para_{{forloop.counter0}}" class="hide article_summary">
                         <ul>
                             {% for sentence in para_item.1 %}
                             <li>{{sentence}}</li>
@@ -47,7 +47,7 @@ var article_id = {{article_id}};
         <div class="page-content-r">
             <div class="comment_summary_wrapper">
                 <h2 class="section_header">Comment Summary</h2>
-                <div class="content_summary">
+                <div class="content_summary article_summary">
 
                 </div>
             </div>

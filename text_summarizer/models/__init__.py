@@ -6,4 +6,5 @@ from text_summarizer.models.jaccard_coefficient import JaccardCoefficient
 from text_summarizer.models.article_edit import ArticleEdit
 from text_summarizer.models.article_edit_summary import ArticleEditSummarySentence
 from text_summarizer.models.similarity_finder import SimilarityFinder
+from text_summarizer.models.cosine_similarity import CosineSimilarity
 from text_summarizer.models.summarizer import Summarizer

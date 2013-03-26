@@ -45,6 +45,15 @@ class UnigramDistribution():
             annotation.save()
 
     @staticmethod
+    def max_tfidf():
+        max_tfidf = -1
+        annotations = Annotation.objects.all()
+        for annotation in annotations:
+            tfidf = annotation.tfidf()
+            max_tfidf = tfidf if max_tfidf < tfidf else max_tfidf
+        return max_tfidf
+
+    @staticmethod
     def generate_vector(text,corpus_tokens):
         #Assumption: the unigram distribution of annotations is modelled into VS. Space is defined by dimension number which is in the DB record
         annotations = Annotation.objects.filter(word__in=corpus_tokens)

@@ -193,6 +193,15 @@ a.closeit:hover{
     list-style-type:disc;
     margin-bottom:10px;
 }
+
+.article_summary ul{
+    padding-left:20px;
+}
+.article_summary ul li{
+    list-style-type:disc;
+    margin-bottom:10px;
+}
+
 .hide{
     display:none;
 }

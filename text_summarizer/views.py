@@ -9,7 +9,9 @@ def index(request,article_id):
     article = get_object_or_404(Article, pk=article_id)
     summarizer = Summarizer()
     paragraphs_with_edit_summary = article.paragraphs_with_edit_summary()
-    summary = summarizer.summarize(article.content)
+    #summary = summarizer.summarize(article.content)
+    #summary = summarizer.summarize_using_cosine_similarity(article.content)
+    summary = summarizer.summarize_using_cos_and_weights(article.content)
     summary_edit_sentences = []
     template = loader.get_template('index.html')
     context = Context({
@@ -29,3 +31,22 @@ def save(request,article_id):
         article_edit = ArticleEdit(article=article,paragraph_number=para_number,content=edited_paragraphs[para_number])
         article_edit.save()
     return HttpResponse('Success')
+
+def summary_using_cosine_similarity(request,article_id):
+    article = get_object_or_404(Article, pk=article_id)
+    summarizer = Summarizer()
+    summary_sentences = summarizer.summarize_using_cosine_similarity(article.content)
+    return HttpResponse(json.dumps(summary_sentences), content_type="application/json")
+
+def summary_using_weights(request,article_id):
+    article = get_object_or_404(Article, pk=article_id)
+    summarizer = Summarizer()
+    summary_sentences = summarizer.summarize(article.content)
+    return HttpResponse(json.dumps(summary_sentences), content_type="application/json")
+
+
+def summary_using_cos_and_weights(request,article_id):
+    article = get_object_or_404(Article, pk=article_id)
+    summarizer = Summarizer()
+    summary_sentences = summarizer.summarize_using_cos_and_weights(article.content)
+    return HttpResponse(json.dumps(summary_sentences), content_type="application/json")

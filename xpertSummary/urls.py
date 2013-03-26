@@ -7,6 +7,9 @@ admin.autodiscover()
 urlpatterns = patterns('',
     # Examples:
      url(r'^article/(?P<article_id>\d+)/$', 'text_summarizer.views.index', name='home'),
+     url(r'^article/(?P<article_id>\d+)/summary_using_weights$', 'text_summarizer.views.summary_using_weights', name='weight_summary'),
+     url(r'^article/(?P<article_id>\d+)/summary_using_cosine_and_weights$', 'text_summarizer.views.summary_using_cos_and_weights', name='summary_using_cos_and_weights'),
+     url(r'^article/(?P<article_id>\d+)/summary_using_cosine_similarity$', 'text_summarizer.views.summary_using_cosine_similarity', name='cosine_summary'),
      url(r'^article/(?P<article_id>\d+)/edit/save/', 'text_summarizer.views.save', name='save_edit'),
     # url(r'^xpertSummary/', include('xpertSummary.foo.urls')),
 

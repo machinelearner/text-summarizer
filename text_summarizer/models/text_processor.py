@@ -21,7 +21,7 @@ class TextProcessor():
 
     def sent_tokenize(self,text):
         sentences = re.compile("[\n\.?]").split(text)
-        sentences = filter(lambda sentence: sentence.strip(),sentences )
+        sentences = filter(lambda sentence: not self.is_blank(sentence),sentences )
         sentences = map(lambda sentence: sentence.strip(),sentences)
         return sentences
 
@@ -36,7 +36,6 @@ class TextProcessor():
         pos_tagged_sentence = self.pos_tag(tokens)
         NER_tree = nltk.ne_chunk(pos_tagged_sentence,binary=True)
         return NER_tree
-
 
     def no_stop_tokens(self,text):
         tokens = []
