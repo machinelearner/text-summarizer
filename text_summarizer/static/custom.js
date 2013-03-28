@@ -10,12 +10,24 @@ $(function(){
     //$(".content_summary").html(html);
     //});
     $(".para_container").hover(function(){
-        var html=$(this).find('div').html();
-        $(".content_summary").html(html);
+        var para_no = $(this).data("parano");
+        var edits=$(this).find('#edits_' + para_no);
+        var summary=$(this).find('#edits_summary_' + para_no);
+        var edit_text = edits.text().trim();
+        var summary_text = summary.text().trim();
+        if(edit_text !="" && summary_text!=""){
+        $(".comment_summary_wrapper").show()
+        $("#edit_summary").html(summary.html());
+        $("#edits").html(edits.html());
         var top= $(this).offset().top - 60;
 
         $(".comment_summary_wrapper").css("top",top);
+        }
+        else{
+            $(".comment_summary_wrapper").hide()
+        }
     });
+
     $("p").click(function(){
         var origianl_txt=$(this).text();
         //alert(origianl_txt);
@@ -68,5 +80,5 @@ $(function(){
             e.preventDefault();
             $('.overlay,.article_summary_dialog').hide();
 
-        });   
+        });
 });

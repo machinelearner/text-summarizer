@@ -2,6 +2,7 @@ from text_summarizer.models import Article
 from django.db import models
 import math
 from django.db.models import Max
+from collections import defaultdict
 
 class Annotation(models.Model):
     WORD_TYPE = (
@@ -25,3 +26,11 @@ class Annotation(models.Model):
     @classmethod
     def max_tf(self):
         return self.objects.all().aggregate(Max('term_frequency'))['term_frequency__max']
+
+    @classmethod
+    def get_top_10_tfidf_tokens_from_list(self,word_list):
+        annotations = self.objects.filter(word__in=word_list)
+        annotation_tfidf_map = defaultdict(float)
+        map(lambda annot: annotation_tfidf_map.update({annot.word:annot.tfidf}),annotations)
+        return sorted(annotation_tfidf_map.keys(), key=annotation_tfidf_map.get)[:10]
+

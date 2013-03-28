@@ -17,13 +17,19 @@ var article_id = {{article_id}};
 
                 <h1 class="section_header">{{title}}</h1>
                 {% if summary %}
-                {% for para_item in article_paragraphs_with_edit_summary %}
-                <div class="para_container">
-                    <p id="para{{forloop.counter0}}">{{para_item.0}}</p>
-                    <div id="edits_para_{{forloop.counter0}}" class="hide article_summary">
-                        <ul>
+                {% for para_item in article_paragraphs_with_edits_and_summary %}
+                <div class="para_container" data-parano="{{forloop.counter0}}">
+                    <p id="para{{forloop.counter0}}" >{{para_item.0}}</p>
+                    <div class="hide article_summary">
+                        <ul id="edits_{{forloop.counter0}}">
+                            {% for para in para_item.2 %}
+                            <li style="margin-bottom:10px">{{para}}</li>
+                            {% endfor %}
+                        </ul>
+
+                        <ul id="edits_summary_{{forloop.counter0}}">
                             {% for sentence in para_item.1 %}
-                            <li>{{sentence}}</li>
+                            <li style="margin-bottom:10px" >{{sentence}}</li>
                             {% endfor %}
                         </ul>
                     </div>
@@ -45,9 +51,16 @@ var article_id = {{article_id}};
 
         </div>
         <div class="page-content-r">
-            <div class="comment_summary_wrapper">
-                <h2 class="section_header">Comment Summary</h2>
-                <div class="content_summary article_summary">
+            <div class="comment_summary_wrapper hide">
+                <h2 class="section_header">Edits</h2>
+                <div id="edits" class="article_summary">
+
+                </div>
+            </div>
+            <p></p>
+            <div class="comment_summary_wrapper hide">
+                <h2 class="section_header">Edit Summary</h2>
+                <div id="edit_summary" class="article_summary">
 
                 </div>
             </div>

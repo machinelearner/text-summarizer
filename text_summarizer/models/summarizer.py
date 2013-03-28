@@ -127,11 +127,13 @@ class Summarizer():
 
         for paragraph_number in edited_paragraph_numbers:
             original_paragraph = original_paragraphs[paragraph_number]
-            original_sentences = self.text_processor.sent_tokenize(original_paragraph)
+            #original_sentences = self.text_processor.sent_tokenize(original_paragraph)
+            original_sentences = self.text_processor.nltk_sentences(original_paragraph)
             edits_for_paragraph = map(lambda paragraph: paragraph.content,edited_paragraphs.filter(paragraph_number=paragraph_number))
             sentences_in_edits = []
             for para in edits_for_paragraph:
-                sentences_in_edits += self.text_processor.sent_tokenize(para)
+                #sentences_in_edits += self.text_processor.sent_tokenize(para)
+                sentences_in_edits += self.text_processor.nltk_sentences(para)
             similar_sentences = SimilarityFinder.cluster_paragraphs(original_sentences,sentences_in_edits)
             summary_sentences = []
             for group,sentences in similar_sentences.items():
@@ -147,6 +149,8 @@ class Summarizer():
         """revisit number of sentence selection"""
         weighted_sentences = defaultdict(float)
         for index,sentence in enumerate(sentences):
+            if self.text_processor.is_blank(sentence):
+                continue
             word_weight_aggregation = self.get_word_weight_aggregation(sentence)
             n_e_r_weight = self.get_n_e_r_weight(sentence)
             weight = self.BETA * word_weight_aggregation + self.GAMMA * n_e_r_weight

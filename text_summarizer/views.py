@@ -8,7 +8,7 @@ from text_summarizer.models import *
 def index(request,article_id):
     article = get_object_or_404(Article, pk=article_id)
     summarizer = Summarizer()
-    paragraphs_with_edit_summary = article.paragraphs_with_edit_summary()
+    paragraphs_with_edits_and_summary = article.paragraphs_with_edits_and_summary()
     #summary = summarizer.summarize(article.content)
     #summary = summarizer.summarize_using_cosine_similarity(article.content)
     summary = summarizer.summarize_using_cos_and_weights(article.content)
@@ -18,7 +18,7 @@ def index(request,article_id):
         'summary': summary,
         'article_id':article_id,
         'title': article.title,
-        'article_paragraphs_with_edit_summary': paragraphs_with_edit_summary,
+        'article_paragraphs_with_edits_and_summary': paragraphs_with_edits_and_summary,
         })
     return HttpResponse(template.render(context))
 

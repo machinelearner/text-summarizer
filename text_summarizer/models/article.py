@@ -19,12 +19,13 @@ class Article(models.Model):
         paragraphs = self.content.split('\n')
         return paragraphs
 
-    def paragraphs_with_edit_summary(self):
+    def paragraphs_with_edits_and_summary(self):
         paragraphs = self.paragraphs()
         paragraphs_with_edit_summary = [0] * len(paragraphs)
         for para_number, paragraph in enumerate(paragraphs):
+            edit_paragraphs = map(lambda edit_para: edit_para.content,self.articleedit_set.all().filter(paragraph_number=para_number))
             edit_sentences = map(lambda edit_sentence: edit_sentence.content,self.articleeditsummarysentence_set.all().filter(paragraph_number=para_number))
-            paragraphs_with_edit_summary[para_number] = [paragraph,edit_sentences]
+            paragraphs_with_edit_summary[para_number] = [paragraph,edit_sentences,edit_paragraphs]
         return paragraphs_with_edit_summary
 
     def __unicode__(self):
